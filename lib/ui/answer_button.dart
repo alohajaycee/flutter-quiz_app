@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class AnswerButton extends StatelessWidget {
+  final String title;
+  final Color color;
+  final VoidCallback _onTap;
 
-	String title;
-	Color color;
-
-	AnswerButton(this.title, this.color);
+  AnswerButton(this.title, this.color, this._onTap);
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +14,19 @@ class AnswerButton extends StatelessWidget {
       child: new Material(
           color: color,
           child: new InkWell(
-              onTap: () => print("You pressed " + title),
+              onTap: () => _onTap(),
               child: new Center(
                   child: new Container(
-                child:
-                    new Text(title, style: new TextStyle(color: Colors.white)),
+                padding: new EdgeInsets.all(10.0),
+                decoration: new BoxDecoration(
+                  border: new Border.all(color: Colors.white, width: 5.0),
+                ),
+                child: new Text(title,
+                    style: new TextStyle(
+                        color: Colors.white,
+                        fontSize: 40.0,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic)),
               )))),
     );
   }

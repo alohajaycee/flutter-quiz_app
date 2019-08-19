@@ -71,9 +71,12 @@ class QuizPageState extends State<QuizPage> {
         }
 				currentQuestion = quiz.nextQuestion;
 				this.setState((){
-					showOverlay = false;	
-					questionText = currentQuestion.question;
-					questionNumber = quiz.questionNumber;
+					showOverlay = false;
+          if(questionNumber < quiz.length) {
+            questionText = currentQuestion.question;
+            questionNumber = quiz.questionNumber;
+          }
+				
 				});
 			}) : new Container()
 		],

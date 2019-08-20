@@ -2,11 +2,16 @@
 
 Foobar is a Python library for dealing with word pluralization.
 ## Roadmap
-__Current__ V1.0.0
+__Next Release__
+- Add quiz difficulty and category setup
+
+__Current__ v1.1.0
+- Get questions from external API
+
+__Old__ V1.0.0
 - Static quiz with score
 
-__Next Release__ v1.1.0
-- Use question APIs
+
 
 
 ## Installation
@@ -14,7 +19,7 @@ __Next Release__ v1.1.0
 Use terminal to install flutter quiz app.
 
 ```bash
-$ git clone git@github.com:alohajaycee/flutter-quiz_app.git
+$ git clone https://github.com/alohajaycee/flutter-quiz_app.git
 $ cd flutter-quiz_app
 $ flutter run
 ```

@@ -5,6 +5,10 @@ import '../utils/quiz.dart';
 import '../ui/answer_button.dart';
 import '../ui/correct_wrong_overlay.dart';
 import './score_page.dart';
+import 'dart:convert';
+import 'package:async/async.dart';
+import 'package:http/http.dart' as http;
+import 'package:html_unescape/html_unescape.dart';
 
 class QuizPage extends StatefulWidget {
   @override
@@ -12,32 +16,58 @@ class QuizPage extends StatefulWidget {
 }
 
 class QuizPageState extends State<QuizPage> {
+  
+  final String url = "https://opentdb.com/api.php?amount=10&type=boolean";
 
 	Question currentQuestion;
-	Quiz quiz = new Quiz([
-		new Question("Tomatoes are vegetables.", false),
-		new Question("There are McDonald's on every continent except one.", true),
-		new Question("America is the world's most populous country.", false),
-		new Question("Italy is in northern Europe.", false),
-		new Question("Sonic the Hedgehog has an actual name.", true),
-		new Question("In Japan they grow triangular watermelons.", false),
-		new Question("The image of dinosaurs in Jurassic Park is accurate.", false),
-		new Question("Both Nicolas Cage and Michael Jackson were married to the same woman.", true),
-		new Question("Most of the world's countries have used atomic weapons in war.", false),
-	]);
+  Quiz quiz;
 
 	String questionText;
 	int questionNumber;
 	bool isCorrect;
 	bool showOverlay = false;
+  bool isLoading = false;
 
+  Future<bool> getJsonData() async {
+    isLoading = true;
+    var response = await http.get(Uri.encodeFull(url));
+    
+    var jsonData = json.decode(response.body);
+
+
+    setState(() {
+      print(jsonData['results']);
+
+      List<Question> listQuestions = [];
+
+      jsonData['results'].forEach((row) => 
+        listQuestions.add(new Question(row['question'].toString(), row['correct_answer'] == 'True' ? true : false))
+      );
+
+      quiz = new Quiz(listQuestions);
+      // quiz = new Quiz(jsonData['results'].map((q) => 
+      //   
+      // ));
+
+      // print(json.encode(quiz));
+
+      // print(quiz);
+
+      currentQuestion = quiz.nextQuestion;
+      questionText    = currentQuestion.question;
+      questionNumber  = quiz.questionNumber;
+      isLoading = false;
+
+    });
+
+    return true;
+  }
 
 	@override
 	void initState() {
 		super.initState();
-		currentQuestion = quiz.nextQuestion;
-		questionText = currentQuestion.question;
-		questionNumber = quiz.questionNumber;
+
+    getJsonData();
 	}
 
 	void handleAnswer(bool answer) {
@@ -48,24 +78,30 @@ class QuizPageState extends State<QuizPage> {
 		});
 	}
 
-	@override
-	Widget build(BuildContext context) {
-		return new Stack(
-		fit: StackFit.expand,
-		children: <Widget>[
-			new Column(
-			//this is the main page
-			children: <Widget>[
-				new AnswerButton(
-					"Tama", Colors.blue, () => handleAnswer(true)),
-				new Center(
-					child: new QuestionText(questionText, questionNumber),
-				),
-				new AnswerButton(
-					"Mali", Colors.red, () => handleAnswer(false))
-			],
-			),
-			showOverlay ? new CorrectWrongOverlay(isCorrect, (){
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      body: RefreshIndicator(
+        onRefresh: getJsonData,
+        child: new Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          !isLoading ? new Column(
+            children: <Widget>[
+              new AnswerButton(
+                "True", Colors.blue, () => handleAnswer(true)),
+              new Center(
+                child: new QuestionText(new HtmlUnescape().convert(questionText), questionNumber)),
+              new AnswerButton(
+                "False", Colors.red, () => handleAnswer(false))
+            ],
+          ) : new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new Text("Loading questions")
+            ],
+          ),
+          	showOverlay ? new CorrectWrongOverlay(isCorrect, (){
         if(quiz.length == questionNumber){
           Navigator.of(context).pushAndRemoveUntil(new MaterialPageRoute(builder: (BuildContext context) => new ScorePage(quiz.score,quiz.length)), (Route route) => route == null);
         }
@@ -79,7 +115,9 @@ class QuizPageState extends State<QuizPage> {
 				
 				});
 			}) : new Container()
-		],
-		);
-	}
+        ],
+      ),
+      )
+    );
+  }
 }

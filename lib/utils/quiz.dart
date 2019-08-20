@@ -6,7 +6,7 @@ class Quiz {
   int _score = 0;
 
   Quiz(this._questions) {
-    _questions.shuffle();
+    // _questions.shuffle();
   }
 
   List<Question> get questions => _questions;
@@ -22,6 +22,7 @@ class Quiz {
   }
 
   void answer(bool isCorrect) {
+    print(isCorrect);
     if(isCorrect) _score++;
   }
 }

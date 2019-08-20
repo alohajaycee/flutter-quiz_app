@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class QuestionText extends StatefulWidget {
@@ -52,7 +54,7 @@ class QuestionTextState extends State<QuestionText>with SingleTickerProviderStat
             padding: new EdgeInsets.all(10.0),
             child: new Center(
             child: new Text(
-                "Question: " + widget._questionNumber.toString() + " :" + widget._question,
+               widget._question == null ? 'Loading' : widget._question,
                 style: new TextStyle(fontSize: _fontSizeAnimation.value * 15)),
           ),
           )

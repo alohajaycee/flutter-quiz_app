@@ -6,6 +6,8 @@ import 'package:true_false/pages/landing_page.dart';
  
 void main() {
   runApp(new MaterialApp(
+    title: "Flutter Quiz App",
+    debugShowCheckedModeBanner: false,
     home: new LandingPage()
   ));
 }

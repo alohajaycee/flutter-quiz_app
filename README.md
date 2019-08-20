@@ -1,6 +1,6 @@
 # Basic Quiz App
 
-Foobar is a Python library for dealing with word pluralization.
+This is a basic flutter application
 ## Roadmap
 __Next Release__
 - Add quiz difficulty and category setup

@@ -19,7 +19,7 @@ __Old__ V1.0.0
 Use terminal to install flutter quiz app.
 
 ```bash
-$ git clone git@github.com:alohajaycee/flutter-quiz_app.git
+$ git clone https://github.com/alohajaycee/flutter-quiz_app.git
 $ cd flutter-quiz_app
 $ flutter run
 ```

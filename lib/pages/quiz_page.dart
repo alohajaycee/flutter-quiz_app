@@ -36,7 +36,6 @@ class QuizPageState extends State<QuizPage> {
 
 
     setState(() {
-      print(jsonData['results']);
 
       List<Question> listQuestions = [];
 
